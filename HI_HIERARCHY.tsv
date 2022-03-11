@@ -1,0 +1,57 @@
+DomainCD	DomainNM	SubdomainCD	SubdomainNM	IndicatorCD	IndicatorNM
+data0	Healthy People	data0	Difficulties in daily life	data0	Disability
+data0	Healthy People	data0	Difficulties in daily life	data1	Hip fractures
+data0	Healthy People	data1	Mental health	data2	Children's social, emotional and mental heath
+data0	Healthy People	data1	Mental health	data3	Mental health
+data0	Healthy People	data1	Mental health	data4	Self-harm
+data0	Healthy People	data1	Mental health	data5	Suicides
+data0	Healthy People	data2	Mortality	data6	Avoidable mortality
+data0	Healthy People	data2	Mortality	data7	Infant mortality
+data0	Healthy People	data2	Mortality	data8	Life expectancy
+data0	Healthy People	data3	Personal well-being	data9	Activities in life are worthwhile
+data0	Healthy People	data3	Personal well-being	data10	Feelings of anxiety
+data0	Healthy People	data3	Personal well-being	data11	Happiness
+data0	Healthy People	data3	Personal well-being	data12	Life satisfaction
+data0	Healthy People	data4	Physical health conditions	data13	Cancer
+data0	Healthy People	data4	Physical health conditions	data14	Cardiovascular conditions
+data0	Healthy People	data4	Physical health conditions	data15	Dementia
+data0	Healthy People	data4	Physical health conditions	data16	Diabetes
+data0	Healthy People	data4	Physical health conditions	data17	Kidney disease
+data0	Healthy People	data4	Physical health conditions	data18	Musculoskeletal conditions
+data0	Healthy People	data4	Physical health conditions	data19	Respiratory conditions
+data1	Healthy Lives	data5	Behavioural risk factors	data20	Alcohol misuse
+data1	Healthy Lives	data5	Behavioural risk factors	data21	Drug misuse
+data1	Healthy Lives	data5	Behavioural risk factors	data22	Healthy eating
+data1	Healthy Lives	data5	Behavioural risk factors	data23	Physical activity
+data1	Healthy Lives	data5	Behavioural risk factors	data24	Sedentary behaviour
+data1	Healthy Lives	data5	Behavioural risk factors	data25	Smoking
+data1	Healthy Lives	data6	Children and young people	data26	Early years development
+data1	Healthy Lives	data6	Children and young people	data27	Pupil attainment
+data1	Healthy Lives	data6	Children and young people	data28	Pupil absences
+data1	Healthy Lives	data6	Children and young people	data29	Teenage pregnancy
+data1	Healthy Lives	data6	Children and young people	data30	Young people in education, employment and apprenticeships
+data1	Healthy Lives	data7	Physiological risk factors	data31	Hypertension
+data1	Healthy Lives	data7	Physiological risk factors	data32	Low birth weight
+data1	Healthy Lives	data7	Physiological risk factors	data33	Overweight and obesity in adults
+data1	Healthy Lives	data7	Physiological risk factors	data34	Overweight and obesity in children
+data1	Healthy Lives	data8	Protective measures	data35	Cancer screening attendance
+data1	Healthy Lives	data8	Protective measures	data36	Sexually transmitted infections
+data1	Healthy Lives	data8	Protective measures	data37	Vaccination coverage
+data2	Healthy Places	data9	Access to green space	data38	Private outdoor space
+data2	Healthy Places	data9	Access to green space	data39	Public green space
+data2	Healthy Places	data10	Access to services	data40	Distance to GP services
+data2	Healthy Places	data10	Access to services	data41	Distance to pharmacies
+data2	Healthy Places	data10	Access to services	data42	Distance to sports or leisure facilities
+data2	Healthy Places	data10	Access to services	data43	Internet access
+data2	Healthy Places	data11	Crime	data44	Low level crime
+data2	Healthy Places	data11	Crime	data45	Personal crime
+data2	Healthy Places	data12	Economic and working conditions	data46	Child poverty
+data2	Healthy Places	data12	Economic and working conditions	data47	Housing affordability
+data2	Healthy Places	data12	Economic and working conditions	data48	Job-related training
+data2	Healthy Places	data12	Economic and working conditions	data49	Unemployment
+data2	Healthy Places	data12	Economic and working conditions	data50	Workplace safety
+data2	Healthy Places	data13	Living conditions	data51	Air pollution
+data2	Healthy Places	data13	Living conditions	data52	Household overcrowding
+data2	Healthy Places	data13	Living conditions	data53	Noise complaints
+data2	Healthy Places	data13	Living conditions	data54	Road safety
+data2	Healthy Places	data13	Living conditions	data55	Rough sleeping
