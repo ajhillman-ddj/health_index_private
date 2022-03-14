@@ -361,9 +361,9 @@ mixin chartSubTitle(i, met)
     | 2015 - 2019
 
 mixin thirdfirst(i, met)
-  | The next highest scoring subdomain is #[+value(sto.sort((a, b) =>  b.value  - a.value )[1].metric.toLowerCase())], 
+  | The next highest scoring subdomain is #[+value(orda[1].metric.toLowerCase())], 
   | while #[+value(place.name)]'s worst score is for 
-  | #[+value(sto.sort((a, b) =>  b.value  - a.value ).at(-1).metric.toLowerCase())].
+  | #[+value(orda[orda.length-1].metric.toLowerCase())].
 
 mixin para(i, met)
   if (i == 0)
