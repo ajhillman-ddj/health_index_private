@@ -1,110 +1,121 @@
 h2
-  | Health in #[+value(place.name)]
-  if ((place.data.Overall.total[2019].rank>122)&(place.data.Overall.total[2019].rank<185))
-    | close to the national average
-  else if (place.data.Overall.total[2019].rank<122)
-    | top
-    if (place.data.Overall.total[2019].rank/307 < 0.05)
-      | #[+value((place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
-    else if (place.data.Overall.total[2019].rank/307 < 0.1)
-      | #[+value(0.1, {'FORMAT': '0%'})]
-    else if (place.data.Overall.total[2019].rank/307 < 0.2)
-      | #[+value(0.2, {'FORMAT': '0%'})]
-    else if (place.data.Overall.total[2019].rank/307 < 0.25)
-      | #[+value(0.25, {'FORMAT': '0%'})]
-    else if (place.data.Overall.total[2019].rank/307 < 0.3)
-      | #[+value(0.3, {'FORMAT': '0%'})]    
-    else if (place.data.Overall.total[2019].rank/307 < 0.4)
-      | #[+value(0.4, {'FORMAT': '0%'})]
-    else if (place.data.Overall.total[2019].rank/307 < 0.5)
-      | #[+value(0.5, {'FORMAT': '0%'})]  
-  else if (place.data.Overall.total[2019].rank>185)
-    | bottom
-    if ((1-(place.data.Overall.total[2019].rank/307))<0.05)
-      | #[+value(1-(place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.1)
-      | #[+value(0.1, {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.2)
-      | #[+value(0.2, {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.25)
-      | #[+value(0.25, {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.3)
-      | #[+value(0.3, {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.4)
-      | #[+value(0.4, {'FORMAT': '0%'})]
-    else if ((1-(place.data.Overall.total[2019].rank/307))<0.5)
-      | #[+value(0.5, {'FORMAT': '0%'})]
-  | across England
+  if (place.data.Overall.total[2019].rank==1)
+    | #[+value(place.name)] has the highest Health Index score across England 
+  else if (place.data.Overall.total[2019].rank==307)
+    | #[+value(place.name)] has the lowest Health Index score across England 
+  else
+    | Health in #[+value(place.name)]
+    if ((place.data.Overall.total[2019].rank>122)&(place.data.Overall.total[2019].rank<185))
+      | close to the national average
+    else if (place.data.Overall.total[2019].rank>184)
+      | top
+      if (place.data.Overall.total[2019].rank/307 < 0.05)
+        | #[+value(Math.ceil(place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
+      else if (place.data.Overall.total[2019].rank/307 < 0.1)
+        | #[+value(0.1, {'FORMAT': '0%'})]
+      else if (place.data.Overall.total[2019].rank/307 < 0.2)
+        | #[+value(0.2, {'FORMAT': '0%'})]
+      else if (place.data.Overall.total[2019].rank/307 < 0.25)
+        | #[+value(0.25, {'FORMAT': '0%'})]
+      else if (place.data.Overall.total[2019].rank/307 < 0.3)
+        | #[+value(0.3, {'FORMAT': '0%'})]    
+      else if (place.data.Overall.total[2019].rank/307 < 0.4)
+        | #[+value(0.4, {'FORMAT': '0%'})]
+      else if (place.data.Overall.total[2019].rank/307 < 0.5)
+        | #[+value(0.5, {'FORMAT': '0%'})]
+    else if (place.data.Overall.total[2019].rank>185)
+      | bottom
+      if ((1-(place.data.Overall.total[2019].rank/307))<0.05)
+        | #[+value(1-(place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.1)
+        | #[+value(0.1, {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.2)
+        | #[+value(0.2, {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.25)
+        | #[+value(0.25, {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.3)
+        | #[+value(0.3, {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.4)
+        | #[+value(0.4, {'FORMAT': '0%'})]
+      else if ((1-(place.data.Overall.total[2019].rank/307))<0.5)
+        | #[+value(0.5, {'FORMAT': '0%'})]
+    | across England
 
 p#subhead
+  - var cha1 = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
   | #[+value(place.name)]'s Health Index score
-  if (place.data.Overall.total[2019].Change1year<0)
-    | decreased
+  if ( Math.abs(cha1) < 0.3 )
+    | remained relatively stable in the year before the coronavirus pandemic.
   else
-    | increased
-  if (Math.abs(place.data.Overall.total[2019].Change1year)>3)
-    | considerably
-  else if (Math.abs(place.data.Overall.total[2019].Change1year)>1)
-    | somewhat
-  else
-    | slightly
-  | in the year before the coronavirus pandemic
+    if ( cha1 < 0 )
+      | decreased
+    else
+      | increased
+    if ( Math.abs(cha1) > 2 )
+      | considerably
+    else if ( Math.abs(cha1) < 0.8 )
+      | slightly
+    | in the year before the coronavirus pandemic
 
 div#co-box
   if (place.data.Overall.total[2019].value>100)
     div#callout-bigno4d
       p
-        | #[+value(place.data.Overall.total[2019].value)]
+        | #[+value(place.data.Overall.total[2019].value, {'FORMAT': '0.0'})]
   else
     div#callout-bigno3d
       p
         | #[+value(place.data.Overall.total[2019].value)]
   div#callout-text
     p
-      | The overall Health Index score of
-      | #[+value(place.data.Overall.total[2019].value)] is
-      | determined by scores for three domains;
-      | Healthy People (#[+value(place.data['Healthy People'].total[2019].value)]),
-      | Healthy Lives (#[+value(place.data['Healthy Lives'].total[2019].value)]) and
-      | Healthy Places (#[+value(place.data['Healthy Places'].total[2019].value)]).
-
+      - var locChange = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
+      - var engChange = england.data.Overall.total[2019].value - england.data.Overall.total[2018].value
+      | #[+value(place.name)] has an overall Health Index score of #[+value(place.data.Overall.total[2019].value, {'FORMAT': '0.0'})];
+      | #[+value((cha1<0)? 'down' : 'up' )]
+      | #[+value(Math.abs(locChange), {'FORMAT': '0.0'})] 
+      | points compared to the previous year.
 
 div#co-box
-  - var locChange = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
-  - var engChange = england.data.Overall.total[2019].value - england.data.Overall.total[2018].value
   div#callout-bigno3d
     p
       | #[+value(place.data.Overall.total[2019].rank, {'ORDINAL_NUMBER':true })]
   div#callout-text
     p
-      | In 2019, #[+value(place.name)]
-      | was ranked
-      | #[+value(place.data.Overall.total[2019].rank, {'ORDINAL_NUMBER':true })]
-      | most healthy out of 307 local authority areas in England
-      | ; its index score 
-      | down by
-      | #[+value(Math.abs(locChange), {'FORMAT': '0.0'})] 
-      | points compared with the previous year.
+      | The area is ranked
+      if (place.data.Overall.total[2019].rank != 1)
+        | #[+value(place.data.Overall.total[2019].rank, {'ORDINAL_NUMBER':true })]
+      | most healthy out of 307 local authority areas in England,
+      | according to newly released data from 2019.
 
 p#score
   | A score of 100 equates to the average across England when the index was first calculated in 2015.
 
 mixin firstrank(i, met)
-  | #[+value(place.name)]
-  | has !{parent}'s
-  if (Math.abs(sto[i][met+"_Reg"])!=1)
-    | #[+value(Math.abs(sto[i][met+"_Reg"]), {'ORDINAL_TEXTUAL':true})]
-  if (sto[i][met]>0)
-    if (negs.includes((sto[i].metric).toLowerCase()))
-      | best score for
+  if (Math.abs(sto[i][met])>5)
+    | !{place.name}'s score for health relating to #[+value((sto[i].metric).toLowerCase())] is 
+    if ( sto[i]['value'] > england.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value + 1 )
+      | above
+    else if ( sto[i]['value'] < england.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value - 1 )
+      | below 
     else
-      | highest score for
+      | close to
+    | the average across England
   else
-    if (negs.includes((sto[i].metric).toLowerCase()))
-      | worst score for
+    | #[+value(place.name)]
+    | has !{parent}'s
+    if (Math.abs(sto[i][met+"_Reg"])!=1)
+      | #[+value(Math.abs(sto[i][met+"_Reg"]), {'ORDINAL_TEXTUAL':true})]
+    if (sto[i][met]>0)
+      if (negs.includes((sto[i].metric).toLowerCase()))
+        | best score for
+      else
+        | highest score for
     else
-      | lowest score for
-  | health relating to #[+value((sto[i].metric).toLowerCase())]
+      if (negs.includes((sto[i].metric).toLowerCase()))
+        | worst score for
+      else
+        | lowest score for
+    | health relating to #[+value((sto[i].metric).toLowerCase())]
 
 mixin firstchange(i, met)
   | #[+value(place.name)]
@@ -127,20 +138,49 @@ mixin firstchange(i, met)
     | greatest #[+value((sto[i][met]>0)?'improvement':'decline')] in
     | health relating to #[+value((sto[i].metric).toLowerCase())]
 
+mixin firstfirst(i, met)
+  | Health in #[+value(place.name)] is strongest among measures relating to the #[+value((sto[i].metric).toLowerCase())] subdomain
+
 mixin firstSen(i, met)
-  if ((met=="rank")|(['Access to green space', 'Access to services'].includes(sto[i].metric)))
+  if (i==0)
+    | #[+firstfirst(i, met)]
+  else if (met=="rank")
     | #[+firstrank(i, met)]
   else
     | #[+firstchange(i, met)]
 
-mixin subd(i)
+mixin subdA(i)
   | #[+value(sto[i].metric)]
   | is a subdomain of
   | #[+value(domLU[sto[i].metric])]
   | which looks at
   eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:'and' }
-    | #[+value(indic.toLowerCase())]
+    | #[+value(uncap(indic))]
   | .
+
+mixin subdB(i)
+  | A subdomain of
+  | #[+value(domLU[sto[i].metric])],
+  | #[+value(sto[i].metric.toLowerCase())] addresses
+  eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:'and' }
+    | #[+value(uncap(indic))]
+  | .
+
+mixin subd(i)
+  synz {mode:'sequence'}
+    syn
+      | #[+subdA(i, met)]
+    syn
+      | #[+subdB(i, met)]
+
+mixin accessfirst(i)
+  | #[+value(place.name)] has a Health Index score of 
+  | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})]
+  | for #[+value(sto[i].metric.toLowerCase())]. 
+  | The average across #[+value(parent)] is 
+  | #[+value(region.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})],
+  | while England has a score of 
+  | #[+value(england.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})].
 
 mixin access(i)
   | #[+value(place.name)] scored particularly low for
@@ -148,64 +188,102 @@ mixin access(i)
   | , with an index value of 
   | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[1])].
   if ( ['Access to services'].includes(sto[i].metric) )
-    | The highest scoring indicator for this subdomain was 
+    | The highest scoring indicator for this subdomain is 
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
-    | , which had an index value of 
+    | , which has an index value of 
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
   else 
     | The index value for
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
-    | was
+    | is
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
 
 mixin topBot(i, yr)
-  if (place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank>0)
-    | top
-    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307, {'FORMAT': '0%'})]
+  if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) > 0.4)
+    | close to average
   else
-    | bottom
-    | #[+value(Math.ceil(Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank)*100/307)/100, {'FORMAT': '0%'})]
+    if (place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank>0)
+      | top
+    else
+      | bottom
+    if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.05)
+      | #[+value((Math.ceil(Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank)*100/307)/100), {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.1)
+      | #[+value(0.1, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.15)
+      | #[+value(0.15, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.2)
+      | #[+value(0.2, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.25)
+      | #[+value(0.25, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.3)
+      | #[+value(0.3, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.4)
+      | #[+value(0.4, {'FORMAT': '0%'})]
+    else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.5)
+      | #[+value(0.5, {'FORMAT': '0%'})]
+
+mixin secondSenfirst(i, met)
+  | #[+value(place.name)]'s highest score across all subdomains is 
+  | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})]
+  | for health relating to #[+value(sto[i].metric.toLowerCase())].
+
+mixin secondSenA(i, met)
+  | Between #[+value((met=="Change1year Rank")?'2018':'2015')] and 2019,
+  | #[+value(place.name)]'s health index value for #[+value(sto[i].metric.toLowerCase())] went from 
+  if (met=="Change1year Rank")
+    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})]
+  else
+    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})]
+  | to #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})].
+  | This means #[+value(place.name)]
+  if (met=="Change1year Rank")
+    if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
+      | went from #[+topBot(i, 2018)] to
+    else
+      | remained in the
+    | #[+topBot(i, 2019)] 
+  else
+    if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
+      | went from #[+topBot(i, 2015)] to
+    else
+      | remained in the
+    | #[+topBot(i, 2019)]
+  |for this subdomain.
+
+
+mixin secondSenB(i, met)
+  - var subcha = place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value - ((met=="Change1year Rank")?place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value:place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value)
+  | #[+value(place.name)]'s score for #[+value(sto[i].metric.toLowerCase())] 
+  | #[+value( (subcha>0)? "rose" : "fell" )]
+  | from 
+  if (met=="Change1year Rank")
+    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})] in 2018
+  else
+    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})] in 2015
+  | to #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})] in 2019.
+  | This means #[+value(place.name)]
+  if (met=="Change1year Rank")
+    if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
+      | went from #[+topBot(i, 2018)] to
+    else
+      | remained in the
+    | #[+topBot(i, 2019)] 
+  else
+    if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
+      | went from #[+topBot(i, 2015)] to
+    else
+      | remained in the
+    | #[+topBot(i, 2019)]
+  | across England for this subdomain.
 
 mixin secondSen(i, met)
-  if (met=="Change1year Rank")
-    | Between 2018 and 2019,
-    | #[+value(place.name)]
-    if (Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].rank/307)!=Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank/307))
-      | went from
-    else
-      | remained in the
-    | #[+topBot(i, 2018)]
-    if (Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].rank/307)!=Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank/307))
-      | (#[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})])
-      | to
-      | #[+topBot(i, 2019)]
-      | (#[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})])
-  else
-    | Between 2015 and 2019,
-    | #[+value(place.name)]
-    if (Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].rank/307)!=Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank/307))
-      | went from
-    else
-      | remained in the
-    | #[+topBot(i, 2015)]
-    if (Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].rank/307)!=Math.round(100*place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank/307))
-      | (#[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})])
-      | to
-      | #[+topBot(i, 2019)]
-      | (#[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})])
-  | for
-  if (negs.includes((sto[i].metric).toLowerCase()))
-    | health relating to
-  | #[+value(sto[i].metric.toLowerCase())]
-  if ((met=="rank")|(['Access to green space', 'Access to services'].includes(sto[i].metric)))
-    | and now has England’s
-    if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank)!=1)
-      | #[+value(Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank), {'ORDINAL_TEXTUAL':true})]
-    if (place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank>0)
-      | highest score
-    else
-      | lowest score
-  | .
+  synz {mode:'sequence'}
+    syn
+      | #[+secondSenB(i, met)]
+    syn
+      | #[+secondSenA(i, met)]
+
 
 mixin declineImp(i, change, index, impDec)
   - var poscha = indiSort(indis[sto[i].metric], index, change)[1]
@@ -237,7 +315,7 @@ mixin however(i, change, impDec)
       if (negs.includes(indiSort(indis[sto[i].metric], -1, change)[0]))
         | , however there was also an increase in
         | #[+value(indiSort(indis[sto[i].metric], -1, change)[0])]
-        | (index fell by #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]))] points)
+        | (index worsened by #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]))] points)
       else
         | , however there was a decline in
         | #[+value(indiSort(indis[sto[i].metric], -1, change)[0])]
@@ -265,23 +343,35 @@ mixin lastSen(i, met)
   if (met=="Change1year Rank")
     | #[+driven(i, "Change1year", imprDecl)]
   else
-    | #[+driven(i, "Change3year", imprDecl)]
+    | #[+driven(i, "change4year", imprDecl)]
 
 mixin chartTitle(i, met)
   | #[+firstSen(i, met)]
 
 mixin chartSubTitle(i, met)
-  if ((met=="rank")|(['Access to green space', 'Access to services'].includes(sto[i].metric)))
-    | Health index values for the #[+value(`"`+(sto[i].metric).toLowerCase()+`"`)] subdomain 
+  if (i==0)
+    | Health Index values for each subdomain in #[+value(place.name)], 2019
+  else if (met=="rank")
+    | Health Index values for the #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")] subdomain 
     | across local authority areas in #[+value(parent)] and 
     | the average across England, 2019
   else 
-    | Health index values for the #[+value(`"`+(sto[i].metric).toLowerCase()+`"`)] subdomain, 
+    | Health Index values for the #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")] subdomain, 
     | #[+value(place.name)], #[+value(parent)] and England,
     | 2015 - 2019
 
+mixin thirdfirst(i, met)
+  | The next highest scoring subdomain is #[+value(sto.sort((a, b) =>  b.value  - a.value )[1].metric.toLowerCase())], 
+  | while #[+value(place.name)]'s worst score is for 
+  | #[+value(sto.sort((a, b) =>  b.value  - a.value ).at(-1).metric.toLowerCase())].
+
 mixin para(i, met)
-  if ( ['Access to green space', 'Access to services'].includes(sto[i].metric) )
+  if (i == 0)
+    p #[+secondSenfirst(i, met)]
+    p #[+subd(i, met)]
+    p #[+thirdfirst(i, met)]
+  else if ( ['Access to green space', 'Access to services'].includes(sto[i].metric) )
+    p #[+accessfirst(i, met)]
     p #[+subd(i, met)]
     p #[+access(i, met)]
   else
@@ -289,9 +379,10 @@ mixin para(i, met)
     p #[+secondSen(i, met)]
     p #[+lastSen(i, met)]
 
-- console.log('indlu', indLU)
 if (sto.length>0)
   - var met = whichMet(sto[0])
+  if ( ['Access to green space', 'Access to services'].includes( sto[0].metric ) )
+    - met = "rank"
   h4 #[+chartTitle(0, met)]
   h5 #[+chartSubTitle(0, met)]
   div#esc123
@@ -304,6 +395,8 @@ if (sto.length>0)
   div.funky
 if (sto.length>1)
   - var met = whichMet(sto[1])
+  if ( ['Access to green space', 'Access to services'].includes( sto[1].metric ) )
+    - met = "rank"
   h4 #[+chartTitle(1, met)]
   h5 #[+chartSubTitle(1, met)]
   div#esc123
@@ -315,6 +408,8 @@ if (sto.length>1)
   div.funky
 if (sto.length>2)
   - var met = whichMet(sto[2])
+  if ( ['Access to green space', 'Access to services'].includes( sto[2].metric ) )
+    - met = "rank"
   h4 #[+chartTitle(2, met)]
   h5 #[+chartSubTitle(2, met)]
   div#esc123
@@ -326,6 +421,8 @@ if (sto.length>2)
   div.funky
 if (sto.length>3)
   - var met = whichMet(sto[3])
+  if ( ['Access to green space', 'Access to services'].includes( sto[3].metric ) )
+    - met = "rank"
   h4 #[+chartTitle(3, met)]
   h5 #[+chartSubTitle(3, met)]
   div#esc123
