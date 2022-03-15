@@ -7,10 +7,10 @@ h2
     | Health in #[+value(place.name)]
     if ((place.data.Overall.total[2019].rank>122)&(place.data.Overall.total[2019].rank<185))
       | close to the national average
-    else if (place.data.Overall.total[2019].rank>184)
+    else if (place.data.Overall.total[2019].rank<184)
       | top
       if (place.data.Overall.total[2019].rank/307 < 0.05)
-        | #[+value(Math.ceil(place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
+        | #[+value(Math.ceil((place.data.Overall.total[2019].rank/307)*100)/100, {'FORMAT': '0%'})]
       else if (place.data.Overall.total[2019].rank/307 < 0.1)
         | #[+value(0.1, {'FORMAT': '0%'})]
       else if (place.data.Overall.total[2019].rank/307 < 0.2)
@@ -26,7 +26,7 @@ h2
     else if (place.data.Overall.total[2019].rank>185)
       | bottom
       if ((1-(place.data.Overall.total[2019].rank/307))<0.05)
-        | #[+value(1-(place.data.Overall.total[2019].rank/307), {'FORMAT': '0%'})]
+        | #[+value(Math.ceil((1-(place.data.Overall.total[2019].rank/307))*100)/100, {'FORMAT': '0%'})]
       else if ((1-(place.data.Overall.total[2019].rank/307))<0.1)
         | #[+value(0.1, {'FORMAT': '0%'})]
       else if ((1-(place.data.Overall.total[2019].rank/307))<0.2)
@@ -70,10 +70,14 @@ div#co-box
     p
       - var locChange = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
       - var engChange = england.data.Overall.total[2019].value - england.data.Overall.total[2018].value
-      | #[+value(place.name)] has an overall Health Index score of #[+value(place.data.Overall.total[2019].value, {'FORMAT': '0.0'})];
-      | #[+value((cha1<0)? 'down' : 'up' )]
-      | #[+value(Math.abs(locChange), {'FORMAT': '0.0'})] 
-      | points compared to the previous year.
+      | #[+value(place.name)] has an overall Health Index score of #[+value(place.data.Overall.total[2019].value, {'FORMAT': '0.0'})],
+      if (cha1==0)
+        | which means it remains unchanged
+      else
+        | which is #[+value((cha1<0)? 'down' : 'up' )]
+        | #[+value(Math.abs(locChange), {'FORMAT': '0.0'})] 
+        | points 
+      | compared with the previous year.
 
 div#co-box
   div#callout-bigno3d
@@ -203,9 +207,9 @@ mixin topBot(i, yr)
     | close to average
   else
     if (place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank>0)
-      | top
+      | in the top
     else
-      | bottom
+      | in the bottom
     if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.05)
       | #[+value((Math.ceil(Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank)*100/307)/100), {'FORMAT': '0%'})]
     else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.1)
@@ -241,13 +245,13 @@ mixin secondSenA(i, met)
     if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
       | went from #[+topBot(i, 2018)] to
     else
-      | remained in the
+      | remained
     | #[+topBot(i, 2019)] 
   else
     if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
       | went from #[+topBot(i, 2015)] to
     else
-      | remained in the
+      | remained
     | #[+topBot(i, 2019)]
   |for this subdomain.
 
@@ -267,13 +271,13 @@ mixin secondSenB(i, met)
     if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
       | went from #[+topBot(i, 2018)] to
     else
-      | remained in the
+      | remained
     | #[+topBot(i, 2019)] 
   else
     if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
       | went from #[+topBot(i, 2015)] to
     else
-      | remained in the
+      | remained
     | #[+topBot(i, 2019)]
   | across England for this subdomain.
 
@@ -286,6 +290,12 @@ mixin secondSen(i, met)
 
 
 mixin declineImp(i, change, index, impDec)
+  - console.log("********")
+  - console.log(' - - > > ',sto[i].metric)
+  - console.log('change', change)
+  - console.log('impDec', impDec)
+  - console.log('sort', indiSort(indis[sto[i].metric], 0, change))
+  - console.log('indis[sto[i].metric', indis[sto[i].metric])
   - var poscha = indiSort(indis[sto[i].metric], index, change)[1]
   - var negcha = indiSort(indis[sto[i].metric], (-1-index), change)[1]
   if ((impDec=="improvement")&(poscha>0.5))
