@@ -20,13 +20,9 @@
 	<script>
 		var pymChild = new pym.Child();
 		var body = document.body;
-		var html = document.documentElement;
 
 		setInterval(function() {
-			pymChild.sendMessage('height', Math.max(
-				body.scrollHeight, body.offsetHeight,
-				html.clientHeight, html.scrollHeight, html.offsetHeight
-			));
+			pymChild.sendMessage('height', Math.max( body.scrollHeight, body.offsetHeight ));
 		}, 500);
 	</script>
 
