@@ -38,8 +38,12 @@
 					y1={yTick + (isBandwidth ? ($yScale.bandwidth() / 2) : 0)}
 					y2={yTick + (isBandwidth ? ($yScale.bandwidth() / 2) : 0)}
 					class:dashed={tickDashed}
-					style='stroke: {tickColor}'
-				></line>
+					style='
+					stroke: {tickColor}; 
+					stroke-width: {1}
+					<!-- stroke: {(tick==100)?'#206095':tickColor};  -->
+					<!-- stroke-width: {(tick==100)?2:1} -->
+					'></line>
 			{/if}
 			{#if tickMarks === true}
 				<line
@@ -56,9 +60,14 @@
 				y='{yTick + (isBandwidth ? $yScale.bandwidth() / 2 : 0)}'
 				dx='{isBandwidth ? -4 : dxTick}'
 				dy='{isBandwidth ? 4 : dyTick}'
-				style="text-anchor:{isBandwidth ? 'end' : textAnchor}; fill: {textColor}">
+				style="
+				text-anchor:{isBandwidth ? 'end' : textAnchor}; 
+				fill: {textColor};
+				<!-- fill: {(tick==100)?'#206095':textColor}; -->
+				<!-- font-weight: {(tick==100)?600:400}; -->
+				">
 					{i == tickVals.length - 1 ? prefix + formatTick(tick) + suffix : formatTick(tick)}
-				</text>
+			</text>
 		</g>
 	{/each}
 </g>
@@ -67,12 +76,13 @@
 	.tick {
 		font-size: .8em;
 	}
-
 	.dashed {
 		stroke-dasharray: 2;
 	}
-
 	.tick.tick-0 line {
 		stroke-dasharray: 0;
 	}
+	/* .gridline {
+		stroke-width: 1;
+	} */
 </style>

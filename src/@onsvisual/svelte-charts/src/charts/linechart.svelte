@@ -1,6 +1,8 @@
 <svelte:options accessors={true} />
 
 <script>
+	import 'whatwg-fetch';
+
 	import { LayerCake, Svg } from 'layercake';
 	import { scaleOrdinal, scaleLinear, scaleSymlog } from 'd3-scale';
   import { tweened } from 'svelte/motion';
@@ -45,7 +47,7 @@
 	export let areaOpacity = 1;
 	export let padding = { top: 0, bottom: 20, left: 35, right: 0 };
 	export let color = null;
-	export let colors = color ? [color] : ['#27A0CC', '#871A5B', '#A8BD3A'] // ['#A8BD3A', '#003C57', '#27A0CC', '#118C7B', '#F66068', '#746CB1', '#22D0B6', 'lightgrey', '#206095'];
+	export let colors = ['#27A0CC', 'silver', '#871A5B'] // ['#27A0CC', '#871A5B', '#A8BD3A'] // ['#A8BD3A', '#003C57', '#27A0CC', '#118C7B', '#F66068', '#746CB1', '#22D0B6', 'lightgrey', '#206095'];
 	export let lineWidth = 4.5;
 	export let interactive = true;
 	export let xPrefix = "";

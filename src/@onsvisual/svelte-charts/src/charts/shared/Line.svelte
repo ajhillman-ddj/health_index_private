@@ -71,10 +71,10 @@
 				class
 				cx={$xScale(e.x)}
 				cy={$yScale(e.y)}
-				r={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 7 : 5 : 5}
+				r={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 8 : 5 : 5}
 				fill={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? $zGet($data[i][0]) : "white" : "white"}
-				stroke="{$config.z ? $zGet($data[i][0]) : $config.zRange[0]}"
-				stroke-width="3"
+				stroke="{(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 'orange' : $zGet($data[i][0]) : $zGet($data[i][0])}"
+				stroke-width="{(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 2 : 3 : 3}"
 				on:mouseover={f => doHover(f, e)}
 				on:mouseleave={f => doHover(f)}
 				on:focus={f => doHover(f, e)}

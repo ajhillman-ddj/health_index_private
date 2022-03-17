@@ -12,6 +12,33 @@
 	// let colorHover = $custom.colorHover ? $custom.colorHover : 'orange';
 	// let colorSelect = $custom.colorSelect ? $custom.colorSelect : '#206095';
 
+	// let say = $coords.map(d => d.at(-1).y)[0]
+	
+
+	function similarY(x, i) {
+		let azza = $coords.map( d => $yScale(d[d.length -1].y) - x )
+		let azzaorder = azza.sort((a, b) => { return Math.abs(a) - Math.abs(b) } )
+
+		if (Math.abs(azzaorder[1])<6) {
+			if (azzaorder[1]>0) {
+				x = x - 5
+			} else {
+				x = x + 5
+			}
+		}
+		else if (Math.abs(azzaorder[1])<12) {
+			if (azzaorder[1]>0) {
+				x = x - 3
+			} else {
+				x = x + 3
+			}
+		}
+		return x
+	}
+	function capi(s) {
+		return s.charAt(0).toUpperCase() + s.slice(1);
+	}
+
 </script>
 
 {#if $coords}
@@ -31,22 +58,9 @@
 		</feMerge>
 	</filter>
 </defs>
+
 <g class="label-group">
-	{#if $coords[0] && $coords[0].x}
-	{#each $coords as d, i}
-		<!-- {#if [hovered, selected].includes($data[i][idKey])} -->
-		<text
-			class="label"
-			transform="translate(5,-5)"
-			filter="url(#bgfill)"
-			fill="#333"
-			x={$xScale(d.x)}
-			y={$yScale(d.y)}>
-			{$data[i][labelKey]}
-		</text>
-		<!-- {/if} -->
-	{/each}
-	{:else if $coords[0] && $coords[0][0] && $coords[0][0].x}
+	{#if $coords[0] && $coords[0][0] && $coords[0][0].x}
 		{#each $coords as d, i}
 			<!-- {#if [hovered, selected].includes($data[i][0][idKey])} -->
 			<text
@@ -55,8 +69,8 @@
 				filter="url(#bgfill)"
 				fill="#333"
 				x={$xScale(d[d.length - 1].x)+10}
-				y={$yScale(d[d.length - 1].y)}>
-				{$data[i][0][labelKey]}
+				y={ similarY($yScale(d[d.length - 1].y), i) }>
+				{capi($data[i][0][labelKey])}
 			</text>
 		{/each}
 	{/if}
@@ -66,7 +80,7 @@
 <g class="hover-label-group">
 	{#if $coords[0] && $coords[0][0] && $coords[0][0].x}
 		{#each $coords as d, i}
-			{#each d as dd}
+			{#each d as dd}	
 				{#if hovered == dd}
 					<text
 						class="hover-label"

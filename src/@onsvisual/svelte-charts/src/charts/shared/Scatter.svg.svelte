@@ -69,7 +69,7 @@
 				cy={($yScale(d.y)*pad)-adj}
 				r={(hovered)? ((hovered.x == d.x)&(hovered.y == d.y)) ? size*1.2 : size : size}
 				fill="{$z ? $zGet($data[i]) : $zRange[0]}"
-				stroke="white"
+				stroke={(hovered)? ((hovered.x == d.x)&(hovered.y == d.y)) ? "orange" : "white" : "white"}
 				stroke-width="2"
 				on:mouseover={f => doHover(f, d)}
 				on:mouseleave={f => doHover(f)}

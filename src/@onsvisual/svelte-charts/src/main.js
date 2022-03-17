@@ -1,3 +1,4 @@
+import "es6-shim";
 import App from './App.svelte';
 import config from '../config.json';
 

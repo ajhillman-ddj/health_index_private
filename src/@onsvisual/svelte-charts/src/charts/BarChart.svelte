@@ -1,24 +1,27 @@
 <svelte:options accessors={true} />
 
 <script>
+	import 'whatwg-fetch';
+
 	import { LayerCake, Svg } from 'layercake';
 	import { scaleBand, scaleOrdinal, scaleLinear, scaleSymlog } from 'd3-scale';
-  import { tweened } from 'svelte/motion';
+	import { tweened } from 'svelte/motion';
 	import { cubicInOut } from 'svelte/easing';
 	import { groupData, stackData } from '../js/utils';
 
 	import SetCoords from './shared/SetCoords.svelte';
 	import Bar from './shared/Bar.svelte';
-	import AxisX from './shared/AxisX.svelte';
-	import AxisY from './shared/AxisY.svelte';
+	import AxisX from './shared/AxisXBar.svelte';
+	import AxisY from './shared/AxisYBar.svelte';
 	import Legend from './shared/Legend.svelte';
 	import Title from './shared/Title.svelte';
 	import Footer from './shared/Footer.svelte';
+	import Labels from './shared/LabelsBar.svelte';
 
-  export let data;
+	export let data;
 	export let height = 250; // number of pixels or valid css height string
-  export let animation = true;
-  export let duration = 800;
+	export let animation = false;
+	export let duration = 800;
 	export let xKey = 'x';
 	export let yKey = 'y';
 	export let zKey = null;
@@ -38,9 +41,9 @@
 	export let legend = false;
 	export let snapTicks = false;
 	export let mode = 'default'; // options: 'default', 'comparison', 'marker', 'stacked', 'grouped'
-	export let padding = { top: 0, bottom: 20, left: 35, right: 0 };
+	export let padding = { top: 0, bottom: 20, left: 0, right: 0 };
 	export let color = null;
-	export let colors = color ? [color] : ['#206095', '#A8BD3A', '#003C57', '#27A0CC', '#118C7B', '#F66068', '#746CB1', '#22D0B6', 'lightgrey'];
+	export let colors = ['#27a0cc', '#2f95c3', '#378ab9', '#3f7eb0', '#4773a6', '#4f689d', '#575d94', '#575d94', '#5f528a', '#674781', '#6f3b77', '#77306e', '#7f2564', '#871a5b'].reverse();
 	export let markerWidth = 2.5;
 	export let spacing = 0.05; // proportion of bar width (1 = 100%)
 	export let interactive = true;
@@ -50,6 +53,7 @@
 	export let ySuffix = "";
 	export let hover = false;
 	export let hovered = null;
+	export let hovmouse = null;
 	export let colorHover = 'orange';
 	export let select = false;
 	export let selected = null;
@@ -77,7 +81,7 @@
 	}
 
 	// Functions to update xDomain
-	const xDomSet = (data, mode, xKey, xMax) => xMax ? [xMin, xMax] : mode == 'stacked' && zKey ? [xMin, Math.max(...getTotals(data, data.map(d => d[yKey]).filter(distinct)))] : [xMin, Math.max(...data.map(d => d[xKey]))];
+	const xDomSet = (data, mode, xKey, xMax) => xMax ? [xMin, xMax] : mode == 'stacked' && zKey ? [xMin, Math.max(...getTotals(data, data.map(d => d[yKey]).filter(distinct)))] : [Math.min(...data.map(d => d[xKey]))-55, Math.max(...data.map(d => d[xKey]))+5];
 	function xDomUpdate(data, mode, xKey, xMax) {
 		let newXDom = xDomSet(data, mode, xKey, xMax);
 		if (newXDom[0] != xDom[0] || newXDom[1] != xDom[1]) {
@@ -120,14 +124,14 @@
 			type: 'bar',
 			mode,
 			idKey,
-      coords,
+			coords,
 			markerWidth,
 			colorSelect,
 			colorHover,
 			colorHighlight,
-      animation,
-      duration
-    }}
+			animation,
+			duration
+		}}
 		let:width
 	>
 	  {#if width > 80} <!-- Hack to prevent rendering before xRange/yRange initialised -->
@@ -137,11 +141,15 @@
       {#if xAxis}
 			  <AxisX ticks={xTicks} formatTick={xFormatTick} {snapTicks} prefix={xPrefix} suffix={xSuffix} {textColor} {tickColor} {tickDashed}/>
       {/if}
-      {#if yAxis}
-			  <AxisY gridlines={false} prefix={yPrefix} suffix={ySuffix} {textColor} {tickColor} {tickDashed}/>
-      {/if}
-			<Bar {select} {selected} {hover} {hovered} {highlighted} on:hover on:select {overlayFill}/>
+
+			<Bar {select} {selected} {hover} bind:hovmouse bind:hovered {highlighted} on:hover on:select {overlayFill}/>
+			<Labels {hovered} {hovmouse}/>
 			<slot name="svg"/>
+
+			{#if yAxis}
+			<AxisY gridlines={false} prefix={yPrefix} suffix={ySuffix} {textColor} {tickColor} {tickDashed}/>
+	{/if}
+
 		</Svg>
 	  <slot name="front"/>
 		{/if}
@@ -157,5 +165,7 @@
 <style>
 	.chart-container {
 		width: 100%;
+		height: 400px !important;
+    	/* margin-left: auto; */
 	}
 </style>

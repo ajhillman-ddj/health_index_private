@@ -1,5 +1,5 @@
 import { csvParse, autoType } from 'd3-dsv';
-let array = ['South East', 'South West', 'East', 'West Midlands', 'East Midlands', 'North East', 'North West']
+let array = ['South East', 'South West', 'East', 'East of England', 'West Midlands', 'East Midlands', 'North East', 'North West']
 function regionThe(place, nt) {
   if (place=="East") { place = place + " England"}
   return ((!array.includes(place))|(nt=="NT")) ? place : 'The ' + place;
@@ -9,6 +9,10 @@ function uncap1(string) {
     if (string.slice(0, 3)=="The") {
         return string.charAt(0).toLowerCase() + string.slice(1);
     } else { return string }
+}
+
+function uncap(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
 let num_word = {'quarter of a million': 250000, 'half a million': 500000, 'three quarters of a million': 750000, 'one million': 1000000};
@@ -191,4 +195,4 @@ async function getData(url) {
   return data;
 }
 
-export { uncap1, regionThe, ud, otherRank, otherEst, qui, cha, cur, figs, get_word, ord, getData };
+export { uncap1, uncap, regionThe, ud, otherRank, otherEst, qui, cha, cur, figs, get_word, ord, getData };

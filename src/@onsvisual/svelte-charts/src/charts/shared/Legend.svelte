@@ -7,6 +7,10 @@
   export let markerWidth = 2.5;
   export let markerLength = 13;
   export let round = false; // to represent round markers
+
+  function capi(s) {
+		return s.charAt(0).toUpperCase() + s.slice(1);
+	}
 </script>
 
 {#if Array.isArray(domain) && Array.isArray(colors)}
@@ -18,7 +22,7 @@
           class:round
           style="background-color: {colors[i]}; width: {!horizontal && (line || (comparison && i != 0)) ? markerWidth : markerLength}px; height: {horizontal && (line || (comparison && i != 0)) ? markerWidth : markerLength}px"
         />
-        {label}
+        {capi(label)}
       </li>
     {/each}
   </ul>

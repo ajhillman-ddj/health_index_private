@@ -1,6 +1,8 @@
 <svelte:options accessors={true} />
 
 <script>	
+	import 'whatwg-fetch';
+
 	import { LayerCake, Svg } from 'layercake';
 	import { scaleOrdinal, scaleLinear, scaleSymlog } from 'd3-scale';
   import { tweened } from 'svelte/motion';
@@ -51,7 +53,7 @@
 	export let padding = { top: 0, bottom: 20, left: 35, right: 0 };
 	export let buffer = 5;
 	export let color = null;
-	export let colors = color ? [color] : ['#27A0CC', '#871A5B', '#A8BD3A'] // ['#A8BD3A', '#27A0CC', '#F66068', '#746CB1', '#22D0B6', 'lightgrey', '#206095', '#003C57', '#118C7B'];
+	export let colors = color ? [color] : ['lightgrey', '#27A0CC', '#871A5B'] // ['#27A0CC', '#871A5B', '#A8BD3A'] // ['#A8BD3A', '#27A0CC', '#F66068', '#746CB1', '#22D0B6', 'lightgrey', '#206095', '#003C57', '#118C7B'];
 	export let r = 6;
 	export let interactive = true;
 	export let xPrefix = "";
@@ -151,9 +153,6 @@
 			  <AxisY ticks={yTicks} formatTick={yFormatTick} prefix={yPrefix} suffix={ySuffix} {textColor} {tickColor} {tickDashed}/>
       {/if}
 			<Scatter {selected} bind:hovered {highlighted} {overlayFill}/>
-			<!-- {#if select || hover}
-				<Voronoi {select} bind:selected {hover} bind:hovered {highlighted} on:hover on:select/>
-			{/if} -->
 			{#if labels}
 				<Labels {hovered} {selected}/>
 			{/if}
