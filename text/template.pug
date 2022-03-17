@@ -8,7 +8,7 @@ h2
     if ((place.data.Overall.total[2019].rank>122)&(place.data.Overall.total[2019].rank<185))
       | close to the national average
     else if (place.data.Overall.total[2019].rank<184)
-      | top
+      | is in the top
       if (place.data.Overall.total[2019].rank/307 < 0.05)
         | #[+value(Math.ceil((place.data.Overall.total[2019].rank/307)*100)/100, {'FORMAT': '0%'})]
       else if (place.data.Overall.total[2019].rank/307 < 0.1)
@@ -24,7 +24,7 @@ h2
       else if (place.data.Overall.total[2019].rank/307 < 0.5)
         | #[+value(0.5, {'FORMAT': '0%'})]
     else if (place.data.Overall.total[2019].rank>185)
-      | bottom
+      | is in the bottom
       if ((1-(place.data.Overall.total[2019].rank/307))<0.05)
         | #[+value(Math.ceil((1-(place.data.Overall.total[2019].rank/307))*100)/100, {'FORMAT': '0%'})]
       else if ((1-(place.data.Overall.total[2019].rank/307))<0.1)
@@ -39,7 +39,7 @@ h2
         | #[+value(0.4, {'FORMAT': '0%'})]
       else if ((1-(place.data.Overall.total[2019].rank/307))<0.5)
         | #[+value(0.5, {'FORMAT': '0%'})]
-    | across England
+    | for England
 
 p#subhead
   - var cha1 = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
@@ -91,8 +91,8 @@ div#co-box
       | most healthy out of 307 local authority areas in England,
       | according to newly released data from 2019.
 
-p#score
-  | A score of 100 equates to the average across England when the index was first calculated in 2015.
+//- p#score
+//-   | A score of 100 equates to the average across England when the index was first calculated in 2015.
 
 mixin firstrank(i, met)
   if (Math.abs(sto[i][met])>5)
@@ -169,7 +169,7 @@ mixin subd(i)
       | addresses
   if (twoindis.includes(sto[i].metric))
     eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:' and' }
-      | #[+value(uncap(indikey[indic]))]
+      | #[+value((uncap(indikey[indic])=='personal crime')? 'personal crime (crimes against individuals)' : uncap(indikey[indic]))]
   else
     eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:', and' }
       | #[+value(uncap(indikey[indic]))]
@@ -185,20 +185,36 @@ mixin accessfirst(i)
   | #[+value(england.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})].
 
 mixin access(i)
-  | #[+value(place.name)] scored particularly low for
-  | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[0])]
-  | , with an index value of 
-  | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[1])].
-  if ( ['Access to services'].includes(sto[i].metric) )
-    | The highest scoring indicator for this subdomain is 
+  if (sto[i].value<100)
+    | #[+value(place.name)]'s score is lower for
+    | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[0])]
+    | , with an index value of 
+    | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[1])].
+    if ( ['Access to services'].includes(sto[i].metric) )
+      | The highest scoring indicator for this subdomain is 
+      | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
+      | , which has an index value of 
+      | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
+    else 
+      | The index value for
+      | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
+      | in #[+value(place.name)] is
+      | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
+  else
+    | #[+value(place.name)]'s score is higher for
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
-    | , which has an index value of 
+    | , with an index value of 
     | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
-  else 
-    | The index value for
-    | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[0])]
-    | in #[+value(place.name)] is
-    | #[+value(indiSort(indis[sto[i].metric], 0, 'rank')[1])].
+    if ( ['Access to services'].includes(sto[i].metric) )
+      | The lowest scoring indicator for this subdomain is 
+      | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[0])]
+      | , which has an index value of 
+      | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[1])].
+    else 
+      | The index value for
+      | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[0])]
+      | in #[+value(place.name)] is
+      | #[+value(indiSort(indis[sto[i].metric], -1, 'rank')[1])].
 
 mixin topBot(i, yr)
   if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) > 0.4)
@@ -339,7 +355,7 @@ mixin declineImp(i, change, index, impDec)
     if (negs.includes(indiSort(indis[sto[i].metric], (-1-index), change)[0]))
       | an increase in
       | #[+value(indiSort(indis[sto[i].metric], (-1-index), change)[0])]
-      | (index worsened by #[+value(Math.abs(negcha), {'FORMAT': '0.0'})] points)
+      | (the index worsened by #[+value(Math.abs(negcha), {'FORMAT': '0.0'})] points)
     else
       | a decline in
       | #[+value(indiSort(indis[sto[i].metric], (-1-index), change)[0])]
@@ -349,21 +365,21 @@ mixin however(i, change, impDec)
   if (impDec=="improvement")
     if ( indiSort(indis[sto[i].metric], -1, change)[1] < 0 )
       if (negs.includes(indiSort(indis[sto[i].metric], -1, change)[0]))
-        | . However there was also an increase in
+        | . However, there was also an increase in
         | #[+value(indiSort(indis[sto[i].metric], -1, change)[0])]
-        | (index worsened by #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]), {'FORMAT': '0.0'})] points)
+        | (the index worsened by #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]), {'FORMAT': '0.0'})] points)
       else
-        | . However there was a decline in
+        | . However, there was a decline in
         | #[+value(indiSort(indis[sto[i].metric], -1, change)[0])]
-        | (a deacrease of #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]), {'FORMAT': '0.0'})])
+        | (a decrease of #[+value(Math.abs(indiSort(indis[sto[i].metric], -1, change)[1]), {'FORMAT': '0.0'})])
   else
     if (indiSort(indis[sto[i].metric], -1, change)[1]>0)
       if (negs.includes(indiSort(indis[sto[i].metric], -1, change)[0]))
-        | . However there was an improvement in
+        | . However, there was an improvement in
         | #[+value(indiSort(indis[sto[i].metric], 0, change)[0])]
         | (an increase of #[+value(indiSort(indis[sto[i].metric], 0, change)[1], {'FORMAT': '0.0'})])
       else
-        | . However there was an decrease in
+        | . However, there was an decrease in
         | #[+value(indiSort(indis[sto[i].metric], 0, change)[0])]
         | (the index improved by #[+value(indiSort(indis[sto[i].metric], 0, change)[0], {'FORMAT': '0.0'})] points)
 
