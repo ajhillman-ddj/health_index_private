@@ -45,7 +45,7 @@ p#subhead
   - var cha1 = place.data.Overall.total[2019].value - place.data.Overall.total[2018].value
   | #[+value(place.name)]'s Health Index score
   if ( Math.abs(cha1) < 0.3 )
-    | remained relatively stable in the year before the coronavirus (COVID-19) pandemic.
+    | remained relatively stable in the year before the coronavirus pandemic.
   else
     if ( cha1 < 0 )
       | decreased
@@ -143,6 +143,10 @@ mixin firstchange(i, met)
       | #[+value(Math.abs(sto[i][met]), {'ORDINAL_TEXTUAL':true})]
     | greatest #[+value((sto[i][met]>0)?'improvement':'decline')] in
     | health relating to #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")]
+    if (met=="Change1year Rank")
+      | between 2018 and 2019
+    else if (met=="Change4year Rank")
+      | in the four years between 2015 and 2019
 
 mixin firstfirst(i, met)
   | Health in #[+value(place.name)] is strongest among measures relating to the 
@@ -156,25 +160,20 @@ mixin firstSen(i, met)
   else
     | #[+firstchange(i, met)]
 
-mixin subdA(i)
-  | #[+value("&quot"+(sto[i].metric)+"&quot")] 
-  | looks at
-  eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:', and' }
-    | #[+value(uncap(indikey[indic]))]
-  | .
-
-mixin subdB(i)
-  | #[+value("&quot"+(sto[i].metric)+"&quot")] addresses
-  eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:', and' }
-    | #[+value(uncap(indikey[indic]))]
-  | .
-
 mixin subd(i)
+  | #[+value("&quot"+(sto[i].metric)+"&quot")] 
   synz {mode:'sequence'}
     syn
-      | #[+subdA(i, met)]
+      | looks at
     syn
-      | #[+subdB(i, met)]
+      | addresses
+  if (twoindis.includes(sto[i].metric))
+    eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:' and' }
+      | #[+value(uncap(indikey[indic]))]
+  else
+    eachz indic in indLU[sto[i].metric] with { separator:',', last_separator:', and' }
+      | #[+value(uncap(indikey[indic]))]
+  | .
 
 mixin accessfirst(i)
   | #[+value(place.name)] has a Health Index score of 
@@ -206,9 +205,9 @@ mixin topBot(i, yr)
     | close to average
   else
     if (place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank>0)
-      | being in the top
+      | in the top
     else
-      | being in the bottom
+      | in the bottom
     if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.05)
       | #[+value((Math.ceil(Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank)*100/307)/100), {'FORMAT': '0%'})]
     else if (Math.abs(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[yr].rank/307) < 0.1)
@@ -232,23 +231,37 @@ mixin secondSenfirst(i, met)
   | for health relating to #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")].
 
 mixin secondSenA(i, met)
+  - var subchaa = place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value - ((met=="Change1year Rank")?place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value:place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value)
+  - var actrankaa = ((met=="Change1year Rank")?place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].rank:place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].rank)
+  - if (actrankaa<0) { actrankaa = actrankaa +308}
+  - var actrankba = place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank
+  - if (actrankba<0) { actrankba = actrankba +308}
+  - var subrankchaa = actrankba - actrankaa
   | Between #[+value((met=="Change1year Rank")?'2018':'2015')] and 2019,
-  | #[+value(place.name)]'s Health Index value for #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")] went from 
-  if (met=="Change1year Rank")
-    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})]
+  | #[+value(place.name)]'s Health Index value for #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")] 
+  if (subchaa==0)
+    | remained close
   else
-    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})]
+    | went from 
+    if (met=="Change1year Rank")
+      | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})]
+    else
+      | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})]
   | to #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})].
-  | This means #[+value(place.name)]
+  if ((Math.sign(subchaa) != Math.sign(subrankchaa)) | (subchaa==0))
+    | This means 
+  else 
+    | Despite the #[+value( (subchaa>0)? "increase" : "decrease" )],
+  | #[+value(place.name)]
   if (met=="Change1year Rank")
     if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
-      | went from #[+topBot(i, 2018)] to
+      | went from being #[+topBot(i, 2018)] to being
     else
       | remained
     | #[+topBot(i, 2019)] 
   else
     if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
-      | went from #[+topBot(i, 2015)] to
+      | went from being #[+topBot(i, 2015)] to being
     else
       | remained
     | #[+topBot(i, 2019)]
@@ -257,24 +270,38 @@ mixin secondSenA(i, met)
 
 mixin secondSenB(i, met)
   - var subcha = place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value - ((met=="Change1year Rank")?place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value:place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value)
+
+  - var actranka = ((met=="Change1year Rank")?place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].rank:place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].rank)
+  - if (actranka<0) { actranka = actranka +308}
+  - var actrankb = place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].rank
+  - if (actrankb<0) { actrankb = actrankb +308}
+  - var subrankcha = actrankb - actranka
   | #[+value(place.name)]'s score for #[+value("&quot"+(sto[i].metric).toLowerCase()+"&quot")] 
-  | #[+value( (subcha>0)? "rose" : "fell" )]
-  | from 
-  if (met=="Change1year Rank")
-    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})] in 2018
+  if (subcha==0)
+    | remained close to 
+    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})]
   else
-    | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})] in 2015
-  | to #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})] in 2019.
-  | This means #[+value(place.name)]
+    | #[+value( (subcha>0)? "improved" : (Math.abs(subcha)<0.4)?"decreased":"fell" )]
+    | from 
+    if (met=="Change1year Rank")
+      | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2018].value, {'FORMAT': '0.0'})] in 2018
+    else
+      | #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2015].value, {'FORMAT': '0.0'})] in 2015
+    | to #[+value(place.data[domLU[sto[i].metric]].subdomains[sto[i].metric].total[2019].value, {'FORMAT': '0.0'})] in 2019.
+  if ((Math.sign(subcha) != Math.sign(subrankcha)) | (subcha==0))
+    | This means 
+  else 
+    | Despite the #[+value( (subcha>0)? "increase" : "decrease" )],
+  | #[+value(place.name)]
   if (met=="Change1year Rank")
     if ( topbotnp(i, 2018, sto) != topbotnp(i, 2019, sto) )
-      | went from #[+topBot(i, 2018)] to
+      | went from being #[+topBot(i, 2018)] to being
     else
       | remained
     | #[+topBot(i, 2019)] 
   else
     if ( topbotnp(i, 2015, sto) != topbotnp(i, 2019, sto) )
-      | went from #[+topBot(i, 2015)] to
+      | went from being #[+topBot(i, 2015)] to being
     else
       | remained
     | #[+topBot(i, 2019)]
@@ -312,7 +339,7 @@ mixin declineImp(i, change, index, impDec)
     if (negs.includes(indiSort(indis[sto[i].metric], (-1-index), change)[0]))
       | an increase in
       | #[+value(indiSort(indis[sto[i].metric], (-1-index), change)[0])]
-      | (index went down by #[+value(Math.abs(negcha), {'FORMAT': '0.0'})] points)
+      | (index worsened by #[+value(Math.abs(negcha), {'FORMAT': '0.0'})] points)
     else
       | a decline in
       | #[+value(indiSort(indis[sto[i].metric], (-1-index), change)[0])]
@@ -347,7 +374,7 @@ mixin driven(i, change, impDec)
   | .
 
 mixin lastSen(i, met)
-  - var imprDecl = (sto[i][met.split(" ")[0]]>0) ? 'improvement' : 'decline'
+  - var imprDecl = (met == 'rank') ? ( (sto[i]['Change4year']>0) ? 'improvement' : 'decline' ) : ( (sto[i][met.split(" ")[0]]>0) ? 'improvement' : 'decline' )
   | The change was largely driven by
   if (met=="Change1year Rank")
     | #[+driven(i, "Change1year", imprDecl)]
@@ -370,10 +397,14 @@ mixin chartSubTitle(i, met)
     | 2015 to 2019
 
 mixin thirdfirst(i, met)
-  | The second highest scoring subdomain is #[+value(orda[1].metric.toLowerCase())], 
+  | The second highest scoring subdomain is #[+value("&quot"+ (orda[1].metric.toLowerCase()) +"&quot")], 
   | while #[+value(place.name)]'s worst score is for 
-  | #[+value(orda[orda.length-1].metric.toLowerCase())].
+  | #[+value("&quot"+ (orda[orda.length-1].metric.toLowerCase()) +"&quot")].
 
+- console.log('sto[0]', sto[0])
+- console.log('sto[1]', sto[1])
+- console.log('sto[2]', sto[2])
+- console.log('sto[3]', sto[3])
 mixin para(i, met)
   if (i == 0)
     p #[+secondSenfirst(i, met)]
@@ -399,6 +430,7 @@ if (sto.length>0)
   div#legend1
   div#info1
   div#chart1
+    h6 Source: Office for National Statistics – Health Index
   div#source1
   p #[+para(0, met)]
   div.funky
@@ -412,6 +444,7 @@ if (sto.length>1)
   div#legend2
   div#info2
   div#chart2
+    h6 Source: Office for National Statistics – Health Index
   div#source2
   p #[+para(1, met)]
   div.funky
@@ -425,6 +458,7 @@ if (sto.length>2)
   div#legend3
   div#info3
   div#chart3
+    h6 Source: Office for National Statistics – Health Index
   div#source3
   p #[+para(2, met)]
   div.funky
@@ -437,6 +471,10 @@ if (sto.length>3)
   div#esc123
   div#legend4
   div#info4
-  div#chart4
+  div#chart4 
+    h6 Source: Office for National Statistics – Health Index
   div#source4
   p #[+para(3, met)]
+  div.funky
+  h2 Creating this content
+  p This article was created using methods of semi-automated journalism. The topics were selected and the text generated based on rules preprogrammed by ONS staff prior to the release o data.
