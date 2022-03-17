@@ -350,7 +350,7 @@ mixin declineImp(i, change, index, impDec)
       | improvements in
       | #[+value( indiSort(indis[sto[i].metric], index, change)[0] )]
       | (an increase of #[+value( Math.abs(poscha), {'FORMAT': '0.0'})])
-  else if (negcha<0.5)
+  else if (Math.abs(negcha)>0.5)
     | #[+value((index!=0)?'and':'')]
     if (negs.includes(indiSort(indis[sto[i].metric], (-1-index), change)[0]))
       | an increase in
