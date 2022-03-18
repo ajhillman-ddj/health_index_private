@@ -11,8 +11,8 @@
 	<link rel='stylesheet' href='./build/bundle.css'>
 
 	<script src="https://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.min.js"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="https://d3js.org/d3.v4.min.js"> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js">
 </script>	
 
 </head>
@@ -27,12 +27,17 @@
 
 		setInterval(function() {
 			pymChild.sendMessage('height', Math.max( body.scrollHeight, body.offsetHeight ));
-
-			// if ($(window).width() > 767) {
-			// 	d3.selectAll("p").style("color", "red");
-			// }
+			if ($(window).width() > 767) {
+				d3.selectAll("p.general").style("font-size", "18px");
+				d3.selectAll("h4").style("font-size", "18px");
+				d3.selectAll("h5").style("font-size", "16px");
+			}
+			else {
+				d3.selectAll("p.general").style("font-size", "16px");
+				d3.selectAll("h4").style("font-size", "16px");
+				d3.selectAll("h5").style("font-size", "14px");
+			}
 		}, 500);
-		// console.log('$(window).width()', $(window).width())
 
 	</script>
 
