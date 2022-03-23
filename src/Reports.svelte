@@ -9,8 +9,8 @@
 
 	var selected, place, region, england, props, subDist;
 
-	import * as someJSON from '../data/healthindexdata.json';
-	import * as someregJSON from '../data/healthindexregdata.json';
+	import * as someJSON from '../data/health.json';
+	import * as someregJSON from '../data/healthreg.json';
 
 	import * as indisJSON from '../data/indis.json';
 	import * as indikeyJSON from '../data/indikey.json';
@@ -24,7 +24,6 @@
 	}
 	$: indikey = indikeyJSON.default
 	$: indLU = indluJSON.default
-	$: console.log('Indicator Lookup', indLU)
 	
 	function capi(s) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
@@ -34,8 +33,6 @@
 	$: if (place) {
 		region = someregJSON.default[place.region.code]
 		england = someregJSON.default['E92000001']
-		console.log('England', england)
-		console.log('region', region)
 	}
 	let options2 = []
 	$: if (data) {
@@ -91,7 +88,6 @@
 	// selected = {code: "E07000223", name: 'Adur'}
 	$: place = data[selected.code]
 	$: subDomains = place.stories
-	$: console.log('Place', place)
 
 	var template = `
 h2
@@ -428,12 +424,6 @@ mixin secondSen(i, met)
 
 
 mixin declineImp(i, change, index, impDec)
-  //- - console.log("********")
-  //- - console.log(' - - > > ',sto[i].metric)
-  //- - console.log('change', change)
-  //- - console.log('impDec', impDec)
-  //- - console.log('indis[sto[i].metric]', indiSort(indis[sto[i].metric], 0, change))
-  //- - console.log('indis[sto[i].metric', indis[sto[i].metric])
   - var poscha = indiSort(indis[sto[i].metric], index, change)[1]
   - var negcha = indiSort(indis[sto[i].metric], (-1-index), change)[1]
   if ((impDec=="improvement")&(poscha>0.5))
@@ -446,7 +436,7 @@ mixin declineImp(i, change, index, impDec)
       | improvements in
       | #[+value( indiSort(indis[sto[i].metric], index, change)[0] )]
       | (an increase of #[+value( Math.abs(poscha), {'FORMAT': '0.0'})])
-  else if (negcha<0.5)
+  else if (Math.abs(negcha)>0.5)
     | #[+value((index!=0)?'and':'')]
     if (negs.includes(indiSort(indis[sto[i].metric], (-1-index), change)[0]))
       | an increase in
@@ -513,23 +503,19 @@ mixin thirdfirst(i, met)
   | while #[+value(place.name)]'s worst score is for 
   | #[+value("&quot"+ (orda[orda.length-1].metric.toLowerCase()) +"&quot")].
 
-- console.log('sto[0]', sto[0])
-- console.log('sto[1]', sto[1])
-- console.log('sto[2]', sto[2])
-- console.log('sto[3]', sto[3])
 mixin para(i, met)
   if (i == 0)
-    p #[+secondSenfirst(i, met)]
-    p #[+subd(i, met)]
-    p #[+thirdfirst(i, met)]
+    p.general #[+secondSenfirst(i, met)]
+    p.general #[+subd(i, met)]
+    p.general #[+thirdfirst(i, met)]
   else if ( ['Access to green space', 'Access to services'].includes(sto[i].metric) )
-    p #[+accessfirst(i, met)]
-    p #[+subd(i, met)]
-    p #[+access(i, met)]
+    p.general #[+accessfirst(i, met)]
+    p.general #[+subd(i, met)]
+    p.general #[+access(i, met)]
   else
-    p #[+subd(i, met)]
-    p #[+secondSen(i, met)]
-    p #[+lastSen(i, met)]
+    p.general #[+subd(i, met)]
+    p.general #[+secondSen(i, met)]
+    p.general #[+lastSen(i, met)]
 
 if (sto.length>0)
   - var met = whichMet(sto[0])
@@ -625,12 +611,10 @@ if (sto.length>3)
 	}
 
 	function indiSort(ob, index, change) {
-		// console.log('ob', ob)
 		let ar = []
 
 		Object.keys(ob).forEach(e => {
 			let tob = {}
-			// console.log('change in ', change)
 			if (change == 'rank') {
 				tob[e] = ob[e][2019]
 			}
@@ -652,7 +636,6 @@ if (sto.length>3)
 			index = ar.length -2
 		}
 
-		// console.log('ar', ar)
 		let inciar = ["Low birth weight"]
 
 		let indiname = Object.keys(ar[index])[0]
@@ -713,7 +696,7 @@ if (sto.length>3)
 			indis: indis,
 			indiSort: indiSort,
 			indikey: indikey,
-			negs: ['smoking', 'anxiety', 'alcohol misuse', 'drug misuse', 'neighbourhood noise', 'air pollution', 'depression', 'self-harm', 'suicides', 'cancer', 'kidney disease', 'cardiovascular conditions', 'crime', 'unemployment', 'low pay', 'difficulties in daily life', 'avoidable mortality', 'infant mortality', "sexually transmitted infections", "hypertension", "low birth weight", "overweight and obesity in adults", "overweight and obesity in children", "cancer", "cardiovascular conditions", "dementia", "diabetes", "kidney disease", "musculoskeletal conditions", "respiratory conditions", "feelings of anxiety", "avoidable mortality", "infant mortality", "self-harm", "suicides", "rough sleeping", "air pollution", "household overcrowding", "noise complaints", "unemployment", "child poverty", "disability", "hip fractures", "low level crime", "personal crime", "pupil absences", "teenage pregnancy", "sedentary behaviour", "smoking", "alcohol misuse", "drug misuse", "distance to gp services", "distance to pharmacies", "distance to sports or leisure facilities", "mortality", "physiological risk factors", "physical health conditions", "difficulties in daily life", "behavioural risk factors"],
+			negs: ['smoking', 'anxiety', 'alcohol misuse', 'drug misuse', 'neighbourhood noise', 'air pollution', 'depression', 'self-harm', 'suicides', 'cancer', 'kidney disease', 'cardiovascular conditions', 'crime', 'unemployment', 'low pay', 'difficulties in daily life', 'avoidable mortality', 'infant mortality', "sexually transmitted infections", "hypertension", "low birth weight", "overweight and obesity in adults", "overweight and obesity in children", "cancer", "cardiovascular conditions", "dementia", "diabetes", "kidney disease", "musculoskeletal conditions", "respiratory conditions", "feelings of anxiety", "avoidable mortality", "infant mortality", "self-harm", "suicides", "rough sleeping", "air pollution", "household overcrowding", "noise complaints", "unemployment", "child poverty", "disability", "hip fractures", "low level crime", "personal crime", "pupil absences", "teenage pregnancy", "sedentary behaviour", "smoking", "alcohol misuse", "drug misuse", "distance to gp services", "distance to pharmacies", "distance to sports or leisure facilities", "mortality", "physiological risk factors", "physical health conditions", "difficulties in daily life", "behavioural risk factors", "mental health conditions", "high blood pressure", "frailty"],
 		})
 		
 		return preres.split(`<div id="esc123"></div>`)
@@ -765,9 +748,6 @@ if (sto.length>3)
 
 				chart_data = chart_data.filter(d => d.id != 'Rest of England')
 
-				console.log('subDomains[i].metric', subDomains[i].metric)
-				console.log('chart_data', chart_data)
-
 				yKey = null
 				zKey = 'id'
 			}
@@ -800,7 +780,7 @@ if (sto.length>3)
 	<script src="./rosaenlg.js" on:load="{onRosaeNlgLoad}"></script>
 </svelte:head>
 
-<div style="height: 5px"></div>
+<div style="height: 10px"></div>
 {#if loaded}
 {#if options2}
 {#if template}
@@ -809,7 +789,7 @@ if (sto.length>3)
 		<div class="col">
 		<div style="margin-right: 32px;">
 			<div class="funky"></div>
-			<p style="margin-top: 50px;">Choose an area to see how different aspects of health have changed. The topics shown are selected based on rules pre-programmed by ONS staff and the text is generated using semi-automated journalism.</p>
+			<p class="general" style="margin-top: 50px;">Choose an area to see how different aspects of health have changed. The topics shown are selected based on rules pre-programmed by ONS staff and the text is generated using semi-automated journalism.</p>
 			<!-- <div class="funky"></div> -->
 			<div class="container" style="margin-top: 50px;">
 				<div id="pcSearch">
@@ -870,7 +850,7 @@ if (sto.length>3)
 		line-height: 1.5;
 	}
 
-	@media (min-width: 640px) {
+	@media screen and (min-width: 640px) {
 		main {
 			max-width: none;
 		}
@@ -967,7 +947,7 @@ if (sto.length>3)
 	:global(#callout-text > p) {
 		margin: 15px 15px;
 	}
-	@media (max-width: 500px) {
+	@media screen and (max-width: 500px) {
 		:global(div#co-box) {
 			grid-template-columns: auto !important
 		}
@@ -988,12 +968,6 @@ if (sto.length>3)
 		:global(div#callout-text) {
 			width: 80%;
     		margin: auto;
-    		margin-top: 20px;
-		}
-		:global(div#callout-text) {
-			width: 80%;
-    		margin: auto;
-    		margin-top: 20px;
 		}
 		/* :global(#callout-text > p) {
 			text-align: justify;
@@ -1078,14 +1052,14 @@ color: #206095;
 		color: #323132;
 	}
 
-	@media (max-width: 767px) {
+	@media screen and (max-width: 767px) {
 		:global(p) {
 			font-size: 16px;
 		}
 
 	}
 
-	/* @media (min-width: 992px) {
+	/* @media screen and (min-width: 992px) {
 		.col {
 
 		}
@@ -1094,7 +1068,7 @@ color: #206095;
 		width: 100%;
 		float: left;
 	}
-	@media (min-width: 768px) {
+	@media screen and (min-width: 768px) {
 		.col {
 			margin: 0;
 			/* margin-left: 16px!important; */
@@ -1116,7 +1090,7 @@ color: #206095;
 		font-size: 16px;
 		color: #323132 !important;
 	}
-	@media (max-width: 767px) {
+	@media screen and (max-width: 767px) {
 		:global(h4) {
 			font-size: 16px;
 		}
@@ -1124,7 +1098,7 @@ color: #206095;
 			font-size: 14px;
 		}
 	}
-	@media (max-width: 400px) {
+	@media screen and (max-width: 400px) {
 		:global(text.label-text) {
 			font-size: 10px !important;
 		}

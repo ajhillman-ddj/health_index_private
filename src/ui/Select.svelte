@@ -157,7 +157,7 @@
 		background-color: #fff;
 		border: 2px solid #206095 !important;
 		border-radius: 0px;
-		-webkit-appearance: none;
+		/* -webkit-appearance: none; */
 		-moz-appearance: none;
 	}
 	#select input:focus {
@@ -237,7 +237,7 @@
 	{/if}
 	{#if expanded}
 	<div id="dropdown" bind:this={el} style="top: 0;">
-		<input type="text" placeholder="" bind:value={filter} autocomplete="false" bind:this={input} on:keyup={doKeyup} />
+		<input type="text" placeholder="" bind:value={filter} autocomplete="false" bind:this={input} on:keyup={doKeyup} ontouchstart="this.removeAttribute('readonly');"/>
 		<ul>
 			{#if filter.length < 0}
 			<li>Type a name...</li>

@@ -350,7 +350,7 @@ mixin declineImp(i, change, index, impDec)
       | improvements in
       | #[+value( indiSort(indis[sto[i].metric], index, change)[0] )]
       | (an increase of #[+value( Math.abs(poscha), {'FORMAT': '0.0'})])
-  else if (negcha<0.5)
+  else if (Math.abs(negcha)>0.5)
     | #[+value((index!=0)?'and':'')]
     if (negs.includes(indiSort(indis[sto[i].metric], (-1-index), change)[0]))
       | an increase in
@@ -423,9 +423,9 @@ mixin thirdfirst(i, met)
 - console.log('sto[3]', sto[3])
 mixin para(i, met)
   if (i == 0)
-    p #[+secondSenfirst(i, met)]
-    p #[+subd(i, met)]
-    p #[+thirdfirst(i, met)]
+    p.general #[+secondSenfirst(i, met)]
+    p.general #[+subd(i, met)]
+    p.general #[+thirdfirst(i, met)]
   else if ( ['Access to green space', 'Access to services'].includes(sto[i].metric) )
     p #[+accessfirst(i, met)]
     p #[+subd(i, met)]
