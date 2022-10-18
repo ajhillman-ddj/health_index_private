@@ -64,7 +64,6 @@
 
 <style>
 	.tick {
-		font-size: .8em;
 	}
 
 	.tick .tick-mark,

@@ -4,7 +4,7 @@
 	const { data, xScale, yScale, zGet, config, custom } = getContext('LayerCake');
 	const dispatch = createEventDispatcher();
 
-	export let lineWidth = 2.5;
+	let lineWidth = 3.5;
 	export let hover = false;
 	export let hovered = null;
 	export let select = false;
@@ -71,8 +71,8 @@
 				class
 				cx={$xScale(e.x)}
 				cy={$yScale(e.y)}
-				r={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 8 : 5 : 5}
-				fill={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? $zGet($data[i][0]) : "white" : "white"}
+				r={(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 8 : 4 : 4}
+				fill="{(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 'orange' : $zGet($data[i][0]) : $zGet($data[i][0])}"
 				stroke="{(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 'orange' : $zGet($data[i][0]) : $zGet($data[i][0])}"
 				stroke-width="{(hovered)? ((hovered.x == e.x)&(hovered.y == e.y)) ? 2 : 3 : 3}"
 				on:mouseover={f => doHover(f, e)}

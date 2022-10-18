@@ -3,6 +3,9 @@ export { default as LineChart } from './src/charts/linechart.svelte';
 export { default as BarChart } from './src/charts/BarChart.svelte';
 export { default as ColumnChart } from './src/charts/ColumnChart.svelte';
 export { default as ScatterChart } from './src/charts/ScatterChart.svelte';
+export { default as DistDotPlotChart } from './src/charts/DistDotPlotChart.svelte';
+export { default as IndicatorDistDotPlotChart } from './src/charts/IndicatorDistDotPlotChart.svelte';
+export { default as DoubleVerticalBeeswarmChart } from './src/charts/DoubleVerticalBeeswarmChart.svelte';
 
 // SHARED COMPONENTS
 // export { default as Annotations } from './src/charts/shared/Annotations.svelte';

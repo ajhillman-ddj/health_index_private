@@ -74,7 +74,6 @@
 
 <style>
 	.tick {
-		font-size: .8em;
 	}
 	.dashed {
 		stroke-dasharray: 2;

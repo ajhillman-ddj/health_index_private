@@ -51,7 +51,7 @@
 				rx='5px'
 				stroke="{d == hovered ? colorHover : null}"
 				stroke-width="{d == hovered ? 1 : 0}"
-				fill="lightgrey"
+				fill="black"
 					on:mouseover={e => doHover(e, d)}
 					on:mouseleave={e => doHover(e)}
 					on:focus={e => doHover(e, d)}

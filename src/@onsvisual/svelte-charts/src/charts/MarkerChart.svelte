@@ -73,7 +73,6 @@
       {#if xAxis}
 			  <AxisX ticks={xTicks} {snapTicks} prefix={xPrefix} suffix={xSuffix}/>
       {/if}
-			<Bar mode="marker" {markerWidth}/>
 		</Svg>
 	  <slot name="front"/>
 		{/if}

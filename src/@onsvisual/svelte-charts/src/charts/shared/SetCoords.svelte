@@ -4,13 +4,17 @@
 
 	const { data, x, y, r, xGet, yGet, rGet, xScale, yScale, yRange, rRange, custom, width } = getContext('LayerCake');
 
-	let coords = $custom.coords;
-  let type = $custom.type;
-	let prevWidth = $width;
+let coords = $custom.coords;
+let type = $custom.type;
+let prevWidth = $width;
 
-	$: setCoords($data, $custom, $x, $y, $r, $width);
+$: setCoords($data, $custom, $x, $y, $r, $width);
 
   function setCoords(data, custom, x, y, r, width) {
+	
+	//console.log(data);
+
+
     let mode = custom.mode;
     let padding = custom.padding;
 		let duration = custom.animation && width == prevWidth ? custom.duration : 0;

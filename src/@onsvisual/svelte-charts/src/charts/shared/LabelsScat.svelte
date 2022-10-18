@@ -54,10 +54,8 @@
 
 <style>
 	.hover-label {
-		font-size: 0.8em;
 		font-weight: 800;
 	}
 	.label {
-		font-size: 0.8em;
 	}
 </style>

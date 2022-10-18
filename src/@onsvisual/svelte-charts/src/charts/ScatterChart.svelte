@@ -152,7 +152,10 @@
       {#if yAxis && yKey}
 			  <AxisY ticks={yTicks} formatTick={yFormatTick} prefix={yPrefix} suffix={ySuffix} {textColor} {tickColor} {tickDashed}/>
       {/if}
-			<Scatter {selected} bind:hovered {highlighted} {overlayFill}/>
+			
+			<g transform="translate(0,-60)"><Scatter {data} {selected} bind:hovered {highlighted} {overlayFill}/></g>
+			<g transform="translate(0,60)"><Scatter {data} {selected} bind:hovered {highlighted} {overlayFill}/></g>
+
 			{#if labels}
 				<Labels {hovered} {selected}/>
 			{/if}

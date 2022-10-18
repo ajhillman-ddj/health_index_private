@@ -1,7 +1,7 @@
 <script>
 	import { getContext } from 'svelte';
 
-	const { data, z, xScale, yScale, zGet, zRange, custom, width } = getContext('LayerCake');
+	const { z, xScale, yScale, zGet, zRange, custom, width } = getContext('LayerCake');
 
 	export let hovered = null;
 	export let selected = null;
@@ -9,8 +9,13 @@
 	export let overlayFill = false;
 	// export let size = 8;
 
+	export let data;
+
 	let coords = $custom.coords;
 	let idKey = $custom.idKey;
+
+	console.log($coords)
+	console.log(data)
 
 	let colorHover = $custom.colorHover ? $custom.colorHover : 'orange';
 	let colorSelect = $custom.colorSelect ? $custom.colorSelect : 'black';
@@ -59,7 +64,7 @@
 </script>
 
 {#if $coords}
-{#if $coords.length == +$data.length}
+<!--{#if $coords.length == +$data.length}-->
 
 	<g class="scatter-group">
 		{#each $coords as d, i}
@@ -68,7 +73,7 @@
 				cx={$xScale(d.x)}
 				cy={($yScale(d.y)*pad)-adj}
 				r={(hovered)? ((hovered.x == d.x)&(hovered.y == d.y)) ? size*1.2 : size : size}
-				fill="{$z ? $zGet($data[i]) : $zRange[0]}"
+				fill="blue"
 				stroke={(hovered)? ((hovered.x == d.x)&(hovered.y == d.y)) ? "orange" : "white" : "white"}
 				stroke-width="2"
 				on:mouseover={f => doHover(f, d)}
@@ -79,5 +84,5 @@
 		{/each}
 	</g>
 
-{/if}
+<!--{/if}-->
 {/if}

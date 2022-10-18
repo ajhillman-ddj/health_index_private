@@ -1,7 +1,7 @@
 <script>
 	import { getContext } from 'svelte';
 
-	const { data, xScale, yScale, custom } = getContext('LayerCake');
+	const { data, xScale, yScale, custom, zGet } = getContext('LayerCake');
 
 	export let hovered = null;
 	export let selected = null;
@@ -67,7 +67,7 @@
 				class="label"
 				transform="translate(2,3)"
 				filter="url(#bgfill)"
-				fill="#333"
+				fill={i == 1 ? "#333" : $zGet($data[i][0])}
 				x={$xScale(d[d.length - 1].x)+10}
 				y={ similarY($yScale(d[d.length - 1].y), i) }>
 				{capi($data[i][0][labelKey])}
@@ -85,7 +85,7 @@
 					<text
 						class="hover-label"
 						filter="url(#bgfillhov)"
-						fill="#333"
+						fill={i == 1 ? "#333" : $zGet($data[i][0])}
 						x={$xScale(dd.x)-12}
 						y={$yScale(dd.y)-15}>
 							{dd.y}
@@ -101,10 +101,8 @@
 
 <style>
 	.hover-label {
-		font-size: 0.8em;
 		font-weight: 800;
 	}
 	.label {
-		font-size: 0.8em;
 	}
 </style>

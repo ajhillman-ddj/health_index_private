@@ -20,7 +20,7 @@
 	import Labels from './shared/Labels.svelte';
 
 	export let data;
-	export let height = 250; // number of pixels or valid css height string
+	export let height = 350; // number of pixels or valid css height string
 	export let animation = false;
 	export let duration = 800;
 	export let xKey = 'x';
@@ -45,7 +45,7 @@
 	export let area = true;
 	export let mode = 'default';
 	export let areaOpacity = 1;
-	export let padding = { top: 0, bottom: 20, left: 35, right: 0 };
+	export let padding = { top: 0, bottom: 20, left: 45, right: 0 };
 	export let color = null;
 	export let colors = ['#27A0CC', 'silver', '#871A5B'] // ['#27A0CC', '#871A5B', '#A8BD3A'] // ['#A8BD3A', '#003C57', '#27A0CC', '#118C7B', '#F66068', '#746CB1', '#22D0B6', 'lightgrey', '#206095'];
 	export let lineWidth = 4.5;
@@ -166,6 +166,7 @@
 {/if}
 
 <style>
+
 	.chart-container {
 		width: 90%;
 	}

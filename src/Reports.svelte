@@ -4,18 +4,21 @@
 	import Select from "./ui/Select.svelte";
 	import { load } from "archieml";
 	import robojournalist from 'robojournalist';
-	import { LineChart, ScatterChart, BarChart } from './@onsvisual/svelte-charts';
+	import { LineChart, DoubleVerticalBeeswarmChart, BarChart, DistDotPlotChart, IndicatorDistDotPlotChart } from './@onsvisual/svelte-charts';
 	import * as d3 from 'd3';
 
 	var selected, place, region, england, props, subDist;
 
-	import * as someJSON from '../data/health.json';
+	import * as someJSON from '../data/healthWith2019Values.json';
 	import * as someregJSON from '../data/healthreg.json';
 
 	import * as indisJSON from '../data/indis.json';
 	import * as indikeyJSON from '../data/indikey.json';
 	import * as domluJSON from '../data/domlu.json';
 	import * as indluJSON from '../data/indlu.json';
+
+	import * as indicatorDistributionData from '../data/binnedIndicatorDistributions2020.json';
+	import * as subDomainDistributionData from '../data/binnedDistributions2020.json'
 
 	$: domLU = domluJSON.default
 	let indis;
@@ -26,6 +29,7 @@
 	$: indLU = indluJSON.default
 	
 	function capi(s) {
+
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	}
 
@@ -87,6 +91,7 @@
 	selected = {code: "E07000124", name: 'Ribble Valley'}
 	// selected = {code: "E07000223", name: 'Adur'}
 	$: place = data[selected.code]
+	$: indicatorData = indisJSON[place["area"]]
 	$: subDomains = place.stories
 
 	var template = `
@@ -652,6 +657,7 @@ if (sto.length>3)
 
 	function loadArea(code) {
 		place = data[code]
+		indicatorData = indisJSON[place["area"]]
 	}
 
 	function iterate(obj, pname) {
@@ -721,20 +727,26 @@ if (sto.length>3)
 	}
 
 	function makeProps(i) {
-		if ((i==0)|(whichMet(subDomains[i]) == 'rank')|(['Access to green space', 'Access to services'].includes(subDomains[i].metric))) {
+		if (i==5) {
+			return props = {
+				area: place,
+				data: indicatorData,
+				distributionData: indicatorDistributionData,
+			}
+		}
+		else if ((i==0)|(whichMet(subDomains[i]) == 'rank')|(['Access to green space', 'Access to services'].includes(subDomains[i].metric))) {
 			// SCATTER
 			let chart_data 
 			let yKey
 			let zKey
 			if (i==0) {
-				chart_data = subDomains.map(d => ({ 'id': (subDomains[i].metric==d.metric)?d.metric:'Other subdomains', 'unique': d['metric'], 'value': d['value'] })).reverse()
+				chart_data = subDomains.map(d => ({ 'id': (subDomains[i].metric==d.metric)?d.metric:'Other subdomains', 'unique': d['metric'], 'value': d['value'], 'value2019': d['value2019'] })).reverse()
 				chart_data.sort((a, b) => a.value - b.value)
-
 				yKey = 'unique'
 				zKey = 'unique'
 			}
 			else {
-				chart_data = subDist[subDomains[i].metric].map(d => ({ 'id': d['RGN21NM'], 'unique': d['AREANM'], 'value': d['time5'] }))
+				chart_data = subDist[subDomains[i].metric].map(d => ({ 'id': d['RGN21NM'], 'unique': d['AREANM'], 'value': d['time5'], 'value2019': d['time4'] }))
 				chart_data.forEach((item, i) => {
 					if (item.unique==place.name) {
 						item.id = place.name
@@ -744,7 +756,7 @@ if (sto.length>3)
 						item.id = "Rest of England"
 					}
 				});
-				chart_data.push({'id': 'Average across England', 'unique': 'Average across England', 'value': england.data[domLU[subDomains[i].metric]].subdomains[subDomains[i].metric].total[2019].value})
+				chart_data.push({'id': 'Average across England', 'unique': 'Average across England', 'value': england.data[domLU[subDomains[i].metric]].subdomains[subDomains[i].metric].total[2019].value, 'value2019': england.data[domLU[subDomains[i].metric]].subdomains[subDomains[i].metric].total[2019].value})
 
 				chart_data = chart_data.filter(d => d.id != 'Rest of England')
 
@@ -759,6 +771,7 @@ if (sto.length>3)
 				xKey: "value",
 				yKey: yKey,
 				zKey: zKey,
+				distributionData: subDomainDistributionData
 				// title: "Multi-line chart"
 			}
 		} else {
@@ -769,11 +782,15 @@ if (sto.length>3)
 				xKey: "year",
 				yKey: "value",
 				zKey: "group",
-				area: false,
+				area: false
+				
 				// title: "Multi-line chart"
 			}
 		}
 	}
+
+
+
 </script>
 
 <svelte:head>
@@ -797,24 +814,26 @@ if (sto.length>3)
 						<p id="searchLabel" style="font-size: medium; color: #206095;">Explore data in your area</p>
 						<div id="dropdown">
 							<div style="margin: 20px auto;">
-								<Select options={options2} bind:selected value="code" label="name" search={true} on:select="{() => { if (selected) { loadArea(selected.code) }}}"/>
+								<Select options={options2} bind:selected value="code" label="name" search={true} on:select="{() => {placeload = true; if (selected) { loadArea(selected.code) }}}"/>
 							</div>
 						</div>
 					</div>
 				</div>
 				<span id="myText"></span>
 			</div>
-			{#if place}	
+			{#if place && placeload}	
 
 			{#each results(place) as res, i (i)}
 				{@html res}
 				{#if i<4}
 					{#if subDist[subDomains[i].metric]}
-						<svelte:component this="{(i==0)? BarChart : ((whichMet(subDomains[i]) == 'rank')|(['Access to green space', 'Access to services'].includes(subDomains[i].metric)))? ScatterChart : LineChart}" {...makeProps(i)}/>
+						<svelte:component this="{(i==0)? DistDotPlotChart : ((whichMet(subDomains[i]) == 'rank')|(['Access to green space', 'Access to services'].includes(subDomains[i].metric)))? DoubleVerticalBeeswarmChart : LineChart}" {...makeProps(i)}/>
 					{/if}
 				{/if}
 			{/each}
-	
+
+			<svelte:component this="{IndicatorDistDotPlotChart}" {...makeProps(5)}
+			/>
 			{/if}
 		</div>
 		</div>
